@@ -16,5 +16,5 @@ Broadly, these are the steps:
 6. Ink detection (!?)
 
 I'm currently on step 2, I have the points split into clusters but I have to figure out how to weigh them.
-I've uploaded my work [here](segment.md).
+I've uploaded my work [here](segment.md). \
 <img src="https://etiennedyer.github.io/assets/vesuvius/dbscan.png" width=400 height=400>

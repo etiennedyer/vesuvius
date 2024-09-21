@@ -1,20 +1,34 @@
-## Work I've been doing on the [Vesuvius Challenge]()
+## Work I've been doing on the [Vesuvius Challenge](https://scrollprize.org/)
 
-I'm developping a sheet stitching algorithm similar to [ThaumatoAnakalyptor](https://github.com/schillij95/ThaumatoAnakalyptor), but working from a Bayesian perspective, where we estimate the probability of a stitch being correct given the stitches in the layers that come before and after it, weighed by how confident we are in those guesses.
+I'm developing a sheet stitching algorithm for the [ThaumatoAnakalyptor](https://github.com/schillij95/ThaumatoAnakalyptor) pipeline, working from a Bayesian perspective, where we estimate the probability of a stitch being correct given the stitches in the layers that come before and after it, weighed by how confident we are in those guesses.
 
-The premises I'm working from are that 1) different parts of a scroll are easily discernable at different points in the scan, and 2) the images change very little from scan-to-scan, so it should be easy to stitch edges together "vertically." The big idea is that we might be able to improve our guesses for hard-to-discern parts by comparing them to the same area where it is easy to discern. \
+The TA pipeline (broadly) works as follows: 
+1. Create a point cloud of the entire scroll
+2. Use the Mask3D deep learning environment to create sheet segments
+3. Stitch the sheet segments together
+4. Reconstruct the full papyrus
+5. Flatten the papyrus
+6. Texture the papyrus
+7. Detect the ink
+
+The current bottleneck is 3. They were previously using a Random Walk algorithm to generate potential stitches, but this was very computationally demanding, and are now looking for more efficient solutions. (What they currently have implemented is, I believe, similar to the original algorithm Dr. Seales and his team were using.) They model the scroll as a connected graph (where nodes represent sheet segments), and try locally figuring out the winding angle of the edge connecting each sheet.
+
+My impression is that trying to solve this locally is really difficult. I'm working on another solution, which uses information about the entire length of the scroll to solve connectivity for a given area.
+
+The premises I'm working from are that 1) different parts of a scroll are easily discernable at different points in the scan, and 2) the images change very little from scan-to-scan, so it should be easy to stitch edges together "vertically." The idea is that we might be able to improve our guesses for hard-to-discern parts by comparing them to the same area where it is easy to discern. \
 <img src="https://etiennedyer.github.io/assets/vesuvius/comparison1.png" width=400 height=400>
 <img src="https://etiennedyer.github.io/assets/vesuvius/comparison2.png" width=400 height=400> \
-*The layers in the encircled area are squished together and hard to discern in the first image, but clearly separated in the second*
+*The encircled area is squished together and hard to discern in the first image, but clearly separated in the second*
 
-Broadly, these are the steps:
+This is the outline of my strategy:
 1. Convert each image to a point cloud
-2. DBSCAN each point cloud into several thousand clusters, each cluster weighed by estimated accuracy
-3. Compare each layer to its neighbours and modify clusters such that they resemble neighbours' high-accuracy areas
-4. Stitch all layers together vertically to create a 3D mesh
-5. Surface reconstruction (??)
-6. Ink detection (!?)
+2. Use a culstering or segmentation algorithm to delineate high-density areas (I've tried DBSCAN with limited success).
+3. Trace the inner outline of the cluster to form a 2D winding graph for each layer, with edges weighed by our confidence in their accuracy
+4. Compare each layer to its neighbours and modify the graph such that it resembles neighbours' high-accuracy areas
+5. Stitch all layers together vertically to create a 3D mesh
 
-I'm currently on step 2, I have the points split into clusters but I have to figure out how to weigh them.
+This corresponds to steps 1-3 in the TA pipeline, I'd use all the same steps afterwards, which seem to be working well.
+I'm currently on step 2, I'm looking at different segmentation algorithms and trying to figure out which makes the most sense.
+
 I've uploaded my work [here](segment.md). \
 <img src="https://etiennedyer.github.io/assets/vesuvius/dbscan.png" width=400 height=400>

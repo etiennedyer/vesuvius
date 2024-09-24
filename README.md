@@ -1,6 +1,6 @@
 ## Work I've been doing on the [Vesuvius Challenge](https://scrollprize.org/)
 
-I'm developing a sheet stitching algorithm for the [ThaumatoAnakalyptor](https://github.com/schillij95/ThaumatoAnakalyptor) pipeline, working from a Bayesian perspective, where we estimate the probability of a stitch being correct given the stitches in the layers that come before and after it, weighed by how confident we are in those guesses.
+I'm developing a sheet stitching algorithm for the [ThaumatoAnakalyptor](https://github.com/schillij95/ThaumatoAnakalyptor) pipeline, working from a Bayesian perspective, where we estimate the probability of a segmentation being correct given the segmentations in the layers that come before and after it, weighed by how confident we are in those guesses.
 
 The TA pipeline (broadly) works as follows: 
 1. Create a point cloud of the entire scroll
@@ -28,8 +28,8 @@ This is the outline of my strategy:
 5. Stitch all layers together vertically to create a 3D mesh
 
 This corresponds to steps 1-3 in the TA pipeline, I'd use all the same steps afterwards, which seem to be working well.
-I'm currently on step 2, I'm looking at different segmentation algorithms and trying to figure out which makes the most sense.
-For step 3, I'm trying to figure out how to only trace the inside face of the scroll. In terms of connecting the edges, I think a model based on distance vs the angle of the edge makes a lot of sense, where node_i is connected to node_{i+1} based on which node scores the highest on some combination of (distance - angle), prioritizing nodes which are along the expected path of the graph.
+I'm currently on step 2, looking at different segmentation algorithms and trying to figure out which makes the most sense.
+For step 3, I think a model based on distance vs the angle of the edge makes a lot of sense, where node_i is connected to node_{i+1} based on which node scores the highest on some combination of (distance - angle), prioritizing nodes which are along the expected path of the graph.
 
 I've uploaded my work [here](segment.md). \
 <img src="https://etiennedyer.github.io/assets/vesuvius/dbscan.png" width=400 height=400>

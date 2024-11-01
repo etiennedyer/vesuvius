@@ -6,12 +6,11 @@ The TA pipeline (broadly) works as follows:
 1. Create a point cloud of the entire scroll
 2. Use the Mask3D deep learning environment to create sheet segments
 3. Stitch the sheet segments together
-4. Reconstruct the full papyrus
-5. Flatten the papyrus
-6. Texture the papyrus
-7. Detect the ink
+4. Reconstruct the papyrus surface in 3D
+5. Flatten the papyrus (i.e., represent it as a single horizontal sheet)
+6. Detect the ink
 
-The current bottleneck is 3. They were previously using a Random Walk algorithm to generate potential stitches, but this was very computationally demanding, and are now looking for more efficient solutions. (What they currently have implemented is, I believe, similar to the original algorithm Dr. Seales and his team were using.) They model the scroll as a connected graph (where nodes represent sheet segments), and try locally figuring out the winding angle of the edge connecting each sheet.
+The current bottleneck is 3. They were previously using a Random Walk algorithm to generate potential stitches, but this was very computationally demanding, and are now looking for more efficient solutions.  What they're currently doing is modeling the scroll as a connected graph (where nodes represent sheet segments), and trying to locally figuring out the optimal winding angle for the edges connecting each sheet.
 
 My impression is that trying to solve this locally is really difficult. I'm working on another solution, which uses information about the entire length of the scroll to solve connectivity for a given area.
 
